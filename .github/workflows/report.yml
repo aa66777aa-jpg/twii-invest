@@ -1,0 +1,57 @@
+name: report
+
+# 週一到週五 台北 14:30（收盤後）；cron 用 UTC
+on:
+  schedule:
+    - cron: "30 6 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "要跑的報告（auto = 依日期判斷）"
+        default: auto
+        type: choice
+        options: [auto, daily, weekly, monthly, all]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: report
+  cancel-in-progress: false
+
+env:
+  TZ: Asia/Taipei
+  PYTHONWARNINGS: ignore
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: 產生報告
+        run: |
+          kind="${{ inputs.kind || 'auto' }}"
+          dow=$(date +%u); dom=$(date +%-d)
+          run() { python report.py "$1"; }
+          case "$kind" in
+            daily|weekly|monthly) run "$kind" ;;
+            all) run daily; run weekly; run monthly ;;
+            auto)
+              run daily
+              if [ "$dow" = 5 ]; then run weekly; fi       # 週五：週報
+              if [ "$dom" -le 7 ]; then run monthly; fi    # 每月前 7 天：月報（同月覆寫，最後一次含完整第一週）
+              ;;
+          esac
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add -A reports
+          git diff --cached --quiet || { git commit -m "report: $(date +%F)"; git push; }
