@@ -20,7 +20,7 @@
 ## 3. 開發約束
 
 - 規則參數全在 [twii/config.py](twii/config.py)，其他模組不寫死數值。
-- 系統 Python 3.9：不要用 `X | Y` 型別語法、`match` 等新語法。
+- 本機系統 Python 3.9（GitHub Actions 用 3.12）：程式要兩邊都能跑，不要用 `X | Y` 型別語法、`match` 等新語法。
 - 跑報告時出現的 urllib3 LibreSSL 警告可忽略（`python3 -W ignore`）。
 
 ## 4. 同步規則
