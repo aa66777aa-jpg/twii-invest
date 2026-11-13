@@ -11,7 +11,19 @@ python3 report.py weekly --no-update  # 使用快取資料，三種報告都適�
 python3 backtest.py 2010       # 回測：純定期定額 vs 加碼規則
 ```
 
-每類報告只保留最新一份。GitHub Actions 會在週一到週五 14:30（台北時間）自動跑日報，週五加跑週報、每月 1–7 日加跑月報，並把結果 commit 回 repo，本機 `git pull` 就能看。手動觸發：GitHub 的 Actions → report → Run workflow。
+以上都是本機執行的指令，報告完全由程式依規則產生，不需要 AI 或 API key。每類報告只保留最新一份。
+
+### 自動執行（GitHub Actions）
+
+週一到週五 14:30（台北時間）自動跑日報，週五加跑週報、每月 1–7 日加跑月報，並把結果 commit 回 repo。
+
+```bash
+git pull                       # 取得最新的自動報告
+gh workflow run report         # 手動觸發（或 GitHub 網頁 Actions → report → Run workflow）
+gh workflow run report -f kind=weekly   # 指定報告：daily / weekly / monthly / all
+```
+
+本機跑的報告只供自己看，不要 commit `reports/`，以免和自動產生的報告衝突；看完可用 `git checkout reports/` 還原。
 
 ```text
 twii-invest/
