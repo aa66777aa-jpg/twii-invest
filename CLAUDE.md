@@ -1,0 +1,3 @@
+@AGENTS.md
+@SPEC.md
+@README.md
