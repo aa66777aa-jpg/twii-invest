@@ -18,7 +18,7 @@
 
 報告由 `report.py daily|weekly|monthly` 產生，同一項資訊只放在一種報告（分工見 AGENTS.md §2）。每類報告只保留最新一份，存新檔時刪除舊檔（舊版從 git 歷史查）；報告不得依賴舊報告檔。
 
-自動執行：GitHub Actions（`.github/workflows/report.yml`）週一到週五台北 14:30 跑日報、週五加跑週報、每月 1–7 日加跑月報，結果 commit 回 repo。時間一律以台北時間計（雲端機器是 UTC）。
+自動執行：GitHub Actions（`.github/workflows/report.yml`）週一到週五台北 14:30 跑日報、週五加跑週報、每月 1–7 日加跑月報，結果 commit 回 repo。時間一律以台北時間計（雲端機器是 UTC，workflow 設 `TZ=Asia/Taipei`，cron 用 UTC 06:30）。
 
 ## 3. 週報（`reports/weekly/YYYY-MM-DD.md`）
 
